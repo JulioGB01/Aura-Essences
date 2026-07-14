@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Aura Essences: perfumes originales, decants y frascos parciales en Bolivia."
+    />
+    <meta name="theme-color" content="#fffdf9" />
+    <title>Aura Essences | Perfumería curada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="config.js" defer></script>
+    <script src="data/products.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#catalogo">Ir al catálogo</a>
+
+    <div class="announcement">
+      <span>Envíos a toda Bolivia</span>
+      <span aria-hidden="true">•</span>
+      <span>Pedidos confirmados personalmente por WhatsApp</span>
+    </div>
+
+    <header class="site-header" id="inicio">
+      <div class="header-inner container">
+        <a class="brand" href="#inicio" aria-label="Aura Essences, inicio">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span class="brand-copy">
+            <strong>Aura</strong>
+            <small>Essences</small>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a href="#catalogo">Perfumes</a>
+          <button class="nav-link" type="button" data-format-link="decant">Decants</button>
+          <button class="nav-link" type="button" data-format-link="parcial">Parciales</button>
+          <button class="nav-link" type="button" data-open-appointment>Catas</button>
+        </nav>
+
+        <div class="header-actions">
+          <button class="button button-ghost header-book" type="button" data-open-appointment>
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
+            </svg>
+            Agendar cata
+          </button>
+          <button class="cart-button" type="button" data-open-cart aria-label="Abrir carrito">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M6 8h12l1 12H5L6 8Zm3 0V6a3 3 0 0 1 6 0v2" />
+            </svg>
+            <span class="cart-label">Carrito</span>
+            <span class="cart-count" data-cart-count>0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Perfumería curada · Bolivia</p>
+            <h1>Tu próxima firma, en el formato que prefieras.</h1>
+            <p class="hero-intro">
+              Prueba con un decant, elige un frasco sellado o aprovecha un parcial.
+              Perfumes seleccionados y atención directa, sin compras a ciegas.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#catalogo">Explorar perfumes</a>
+              <button class="button button-secondary" type="button" data-open-appointment>
+                Reservar una cata
+              </button>
+            </div>
+            <ul class="hero-benefits" aria-label="Beneficios">
+              <li>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg>
+                Stock verificado
+              </li>
+              <li>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg>
+                Asesoría personal
+              </li>
+              <li>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg>
+                Pedido por WhatsApp
+              </li>
+            </ul>
+          </div>
+
+          <div class="format-showcase" aria-label="Formatos disponibles">
+            <article class="format-card format-card-featured">
+              <div>
+                <span class="format-number">01</span>
+                <p>Empieza pequeño</p>
+                <h2>Decants</h2>
+                <span>Prueba 5 o 10 ml antes de elegir.</span>
+              </div>
+              <button type="button" data-format-link="decant" aria-label="Ver decants">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+              </button>
+            </article>
+            <article class="format-card">
+              <div>
+                <span class="format-number">02</span>
+                <p>El ritual completo</p>
+                <h2>Frascos</h2>
+                <span>Sellados y listos para regalar.</span>
+              </div>
+              <button type="button" data-format-link="entero" aria-label="Ver frascos enteros">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+              </button>
+            </article>
+            <article class="format-card format-card-wide">
+              <div>
+                <span class="format-number">03</span>
+                <p>Más perfume, mejor precio</p>
+                <h2>Parciales</h2>
+                <span>Botellas abiertas con nivel y precio claros.</span>
+              </div>
+              <button type="button" data-format-link="parcial" aria-label="Ver frascos parciales">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="catalog-section" id="catalogo">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Encuentra tu aroma</p>
+              <h2>Explora la colección</h2>
+            </div>
+            <p>
+              Filtra por persona o formato. En cada perfume podrás elegir la presentación
+              disponible antes de agregarlo.
+            </p>
+          </div>
+
+          <div class="catalog-toolbar">
+            <label class="search-box">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m16 16 5 5" /></svg>
+              <span class="sr-only">Buscar perfume, marca o nota</span>
+              <input id="search-input" type="search" placeholder="Busca por perfume, marca o nota…" autocomplete="off" />
+              <kbd>⌘ K</kbd>
+            </label>
+            <label class="sort-select">
+              <span>Ordenar</span>
+              <select id="sort-select">
+                <option value="featured">Destacados</option>
+                <option value="price-asc">Menor precio</option>
+                <option value="price-desc">Mayor precio</option>
+                <option value="name">Nombre A–Z</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="filters-row">
+            <div class="filter-group" aria-label="Filtrar por género">
+              <span>Para</span>
+              <div class="chip-list" id="gender-filters">
+                <button class="filter-chip is-active" type="button" data-filter="all">Todos</button>
+                <button class="filter-chip" type="button" data-filter="mujer">Mujer</button>
+                <button class="filter-chip" type="button" data-filter="hombre">Hombre</button>
+                <button class="filter-chip" type="button" data-filter="unisex">Unisex</button>
+              </div>
+            </div>
+            <div class="filter-group" aria-label="Filtrar por formato">
+              <span>Formato</span>
+              <div class="chip-list" id="format-filters">
+                <button class="filter-chip is-active" type="button" data-filter="all">Todos</button>
+                <button class="filter-chip" type="button" data-filter="decant">Decants</button>
+                <button class="filter-chip" type="button" data-filter="entero">Sellados</button>
+                <button class="filter-chip" type="button" data-filter="parcial">Parciales</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="results-meta">
+            <p><strong id="results-count">0</strong> perfumes encontrados</p>
+            <button id="clear-filters" class="text-button" type="button" hidden>Limpiar filtros</button>
+          </div>
+
+          <div class="product-grid" id="product-grid" aria-live="polite"></div>
+
+          <div class="empty-state" id="empty-state" hidden>
+            <span aria-hidden="true">A</span>
+            <h3>No encontramos ese perfume</h3>
+            <p>Prueba otra búsqueda o quita uno de los filtros.</p>
+            <button class="button button-secondary" id="empty-clear" type="button">Ver toda la colección</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="how-section">
+        <div class="container">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Comprar es simple</p>
+              <h2>Tú eliges. Nosotros te asesoramos.</h2>
+            </div>
+          </div>
+          <ol class="steps-grid">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>Explora</h3>
+                <p>Busca por nombre, notas, género o formato.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>Elige tu formato</h3>
+                <p>Decant, frasco sellado o parcial con nivel indicado.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>Confirma por WhatsApp</h3>
+                <p>Recibimos tu carrito, confirmamos stock y coordinamos la entrega.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="appointment-section">
+        <div class="container appointment-card">
+          <div class="appointment-mark" aria-hidden="true">AE</div>
+          <div>
+            <p class="eyebrow">¿Todavía no sabes cuál elegir?</p>
+            <h2>Ven a descubrirlo en una cata privada.</h2>
+            <p>
+              Cuéntanos qué aromas te gustan y prepara una selección para probar durante una hora.
+            </p>
+          </div>
+          <button class="button button-light" type="button" data-open-appointment>
+            Agendar mi visita
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <a class="brand brand-footer" href="#inicio">
+            <span class="brand-mark" aria-hidden="true">A</span>
+            <span class="brand-copy"><strong>Aura</strong><small>Essences</small></span>
+          </a>
+          <p>Perfumes que se sienten tuyos.</p>
+        </div>
+        <div>
+          <strong>Comprar</strong>
+          <a href="#catalogo">Todos los perfumes</a>
+          <button type="button" data-format-link="decant">Decants</button>
+          <button type="button" data-format-link="parcial">Parciales</button>
+        </div>
+        <div>
+          <strong>Ayuda</strong>
+          <button type="button" data-open-appointment>Agendar una cata</button>
+          <a id="footer-whatsapp" href="#" target="_blank" rel="noopener">Hablar por WhatsApp</a>
+        </div>
+        <div>
+          <strong>Ubicación</strong>
+          <a id="footer-location" href="#" target="_blank" rel="noopener">Ver ubicación en Google Maps</a>
+          <span data-business-hours="weekday">Lun–Vie · 09:00–17:00</span>
+          <span data-business-hours="weekend">Sáb–Dom · 09:00–15:00</span>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© <span id="current-year"></span> Aura Essences</span>
+        <span>Catálogo sujeto a disponibilidad</span>
+      </div>
+    </footer>
+
+    <div class="overlay" data-overlay hidden></div>
+
+    <aside class="cart-drawer" id="cart-drawer" aria-labelledby="cart-title" aria-hidden="true">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">Tu selección</p>
+          <h2 id="cart-title">Carrito <span data-cart-count-label>(0)</span></h2>
+        </div>
+        <button class="icon-button" type="button" data-close-cart aria-label="Cerrar carrito">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+      <div class="cart-content" id="cart-content"></div>
+      <div class="drawer-footer" id="cart-footer">
+        <div class="cart-total">
+          <span>Total referencial</span>
+          <strong id="cart-total">Bs. 0</strong>
+        </div>
+        <p>Confirmaremos stock, total final y entrega personalmente.</p>
+        <a class="button button-whatsapp is-disabled" id="whatsapp-checkout" href="#" target="_blank" rel="noopener" aria-disabled="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z" /><path d="M8.6 8.2c.4 3.3 2.1 5 5.3 5.7" /></svg>
+          Pedir por WhatsApp
+        </a>
+      </div>
+    </aside>
+
+    <div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="product-modal-title" hidden>
+      <div class="modal-panel product-modal-panel">
+        <button class="icon-button modal-close" type="button" data-close-product aria-label="Cerrar detalle">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+        <div id="product-modal-content"></div>
+      </div>
+    </div>
+
+    <div class="modal" id="appointment-modal" role="dialog" aria-modal="true" aria-labelledby="appointment-title" hidden>
+      <div class="modal-panel appointment-modal-panel">
+        <button class="icon-button modal-close" type="button" data-close-appointment aria-label="Cerrar agenda">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+        <p class="eyebrow">Una experiencia para ti</p>
+        <h2 id="appointment-title">Agenda una cata de perfumes</h2>
+        <p class="modal-intro">
+          Revisa la disponibilidad y envíanos tu horario preferido. Cada visita dura un máximo de
+          <strong data-appointment-duration>60 minutos</strong> y se confirma por WhatsApp.
+        </p>
+        <div class="calendar-preview" id="calendar-preview" hidden>
+          <iframe
+            id="calendar-frame"
+            title="Calendario de disponibilidad de Aura Essences"
+            loading="lazy"
+            frameborder="0"
+            scrolling="no"
+          ></iframe>
+          <p>Calendario de referencia. La solicitud se confirma personalmente por WhatsApp.</p>
+        </div>
+        <form id="appointment-form">
+          <label>
+            <span>Tu nombre</span>
+            <input name="name" type="text" placeholder="¿Cómo te llamas?" required />
+          </label>
+          <div class="form-row">
+            <label>
+              <span>Fecha preferida</span>
+              <input name="date" id="appointment-date" type="date" required />
+            </label>
+            <label>
+              <span>Horario</span>
+              <select name="time" required>
+                <option value="">Seleccionar</option>
+                <option>10:00</option>
+                <option>11:30</option>
+                <option>14:30</option>
+                <option>16:00</option>
+                <option>17:30</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            <span>¿Qué te gustaría probar? <small>(opcional)</small></span>
+            <textarea name="notes" rows="3" placeholder="Ej. aromas frescos, dulces o una lista de perfumes…"></textarea>
+          </label>
+          <button class="button button-whatsapp" type="submit">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.4-4A8 8 0 1 1 20 11.6Z" /><path d="M8.6 8.2c.4 3.3 2.1 5 5.3 5.7" /></svg>
+            Solicitar cita por WhatsApp
+          </button>
+          <a class="button button-secondary calendar-booking" id="calendar-booking" href="#" target="_blank" rel="noopener" hidden>
+            Ver horarios disponibles
+          </a>
+        </form>
+        <p class="form-note">La cita queda confirmada únicamente después de recibir nuestra respuesta.</p>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

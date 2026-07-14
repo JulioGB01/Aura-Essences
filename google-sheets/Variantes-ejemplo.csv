@@ -1,0 +1,16 @@
+id,producto_id,tipo,etiqueta,detalle,precio,stock,activo
+decant-3,perfume-1,decant,Decant 3 ml,Para una primera prueba,55,12,SI
+decant-5,perfume-1,decant,Decant 5 ml,El tamaño más elegido,90,9,SI
+decant-9,perfume-1,decant,Decant 9 ml,Para usarlo por más tiempo,150,6,SI
+parcial-65,perfume-1,parcial,Parcial · quedan 65 ml,Botella abierta con caja,270,1,SI
+entero-100,perfume-1,entero,Frasco completo 100 ml,Caja sellada,500,3,SI
+decant-3,perfume-2,decant,Decant 3 ml,Para una primera prueba,60,10,SI
+decant-5,perfume-2,decant,Decant 5 ml,El tamaño más elegido,95,8,SI
+decant-9,perfume-2,decant,Decant 9 ml,Para usarlo por más tiempo,160,5,SI
+parcial-72,perfume-2,parcial,Parcial · quedan 72 ml,Botella abierta sin caja,290,1,SI
+entero-100,perfume-2,entero,Frasco completo 100 ml,Caja sellada,540,2,SI
+decant-3,perfume-3,decant,Decant 3 ml,Para una primera prueba,50,14,SI
+decant-5,perfume-3,decant,Decant 5 ml,El tamaño más elegido,85,10,SI
+decant-9,perfume-3,decant,Decant 9 ml,Para usarlo por más tiempo,145,7,SI
+parcial-60,perfume-3,parcial,Parcial · quedan 60 ml,Botella abierta con caja,250,1,SI
+entero-100,perfume-3,entero,Frasco completo 100 ml,Caja sellada,480,4,SI

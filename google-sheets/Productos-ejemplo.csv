@@ -1,0 +1,4 @@
+id,nombre,marca,genero,familia,notas,descripcion,imagen_url,destacado,activo
+perfume-1,Perfume 1,Aura Essences,mujer,Floral gourmand,flores blancas|vainilla|almizcle,"Producto de demostración para visualizar todas las presentaciones.",https://res.cloudinary.com/pumrpvlq/image/upload/IMG-7435_grok49.webp,1,SI
+perfume-2,Perfume 2,Aura Essences,hombre,Aromático amaderado,cítricos|especias|maderas,"Producto de demostración con precios distintos para probar el carrito.",https://res.cloudinary.com/pumrpvlq/image/upload/41ZQdV659VL._SX466__zf865t.jpg,2,SI
+perfume-3,Perfume 3,Aura Essences,unisex,Ámbar frutal,frutas|ámbar|vainilla,"Producto de demostración para comprobar búsquedas y disponibilidad.",https://res.cloudinary.com/pumrpvlq/image/upload/images_us6vht.jpg,3,SI

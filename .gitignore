@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.*
+*.log
+
+# Export roto conservado solo como referencia local; no se publica.
+aura-essences_vercel_app.html
