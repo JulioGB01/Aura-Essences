@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2a1c3b">
+<title>Aura Essences · Gestión</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <nav class="side" id="nav"></nav>
+  <main id="main"><div class="empty">Cargando…</div></main>
+</div>
+<button id="sync" class="sync idle" onclick="Sync.syncNow().then(() => typeof refresh === 'function' && refresh())">☁️</button>
+<div id="toast"></div>
+<datalist id="dl-perfumes"></datalist>
+<datalist id="dl-clientes"></datalist>
+<datalist id="dl-proveedores"></datalist>
+<datalist id="dl-categorias"></datalist>
+<script src="vendor/sql-wasm.js"></script>
+<script src="db.js"></script>
+<script src="sync.js"></script>
+<script src="common.js"></script>
+<script src="app.js"></script>
+<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
+</body>
+</html>

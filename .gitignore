@@ -7,3 +7,7 @@ node_modules/
 
 # Export roto conservado solo como referencia local; no se publica.
 aura-essences_vercel_app.html
+
+# Windows / Drive files
+desktop.ini
+.agents/
