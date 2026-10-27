@@ -14,6 +14,6 @@ window.AURA_CONFIG = {
     weekday: "Lun–Vie · 09:00–17:00",
     weekend: "Sáb–Dom · 09:00–15:00",
   },
-  currency: "BOB",
+  currency: "Bs",
   locale: "es-BO",
 };

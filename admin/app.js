@@ -146,41 +146,45 @@ const waBtn = (wa, texto, label = "WhatsApp") => wa ? `<a class="wa" target="_bl
 // ================================================================== INICIO
 async function pgInicio(el) {
   const D = await api("inicio");
-  const P = D.pendientes;
-  const neg = esc(S.boot.config.negocio);
-  const ventas = await api("ventas?limit=6");
-  const item = (html) => `<div class="item">${html}</div>`;
+  const P = D.pendientes, cfg = S.boot.config;
+  const ventas = await api("ventas?limit=5");
+  const top = (arr, n = 3) => arr.slice(0, n);
+  const fila = (txt, extra = "") => `<div class="item"><span class="grow">${txt}</span>${extra}</div>`;
+  const wa = (w, msg, id) => waBtn(w, msg, "WhatsApp") || `<a href="#clientes/${id}" class="hint">+ teléfono</a>`;
+  const grupos = [];
+  if (P.reponer.length) grupos.push(["🔁", "Reponer", P.reponer.length, top(P.reponer).map(p => fila(`<b>${esc(p.nombre)}</b> <span class="hint">${stockCell(p)}</span>`)).join("")]);
+  if (P.ofrecer.length) grupos.push(["🎯", "Ofrecer el frasco", P.ofrecer.length, top(P.ofrecer).map(o => fila(`<b>${esc(o.cliente)}</b> <span class="hint">probó ${esc(o.perfume)}</span>`,
+    wa(o.wa, `Hola ${o.cliente}! ¿Qué tal te fue con el ${o.perfume}? Tengo el frasco completo${o.precio ? " a Bs " + n0(o.precio) : ""}. ¿Te lo separo?`, o.cliente_id))).join("")]);
+  if (P.escribir.length) grupos.push(["💬", "Clientes que no vuelven", P.escribir.length, top(P.escribir).map(c => fila(`<b>${esc(c.nombre)}</b> <span class="hint">hace ${c.dias} días</span>`,
+    wa(c.wa, `Hola ${c.nombre}! Te escribo de ${cfg.negocio}. Llegaron novedades que te pueden gustar 😊`, c.id))).join("")]);
   const avisos = [];
-  if (P.negativos.length) avisos.push(["bad", `Stock en negativo (se vendió más de lo registrado): ${P.negativos.map(p => esc(p.nombre)).join(", ")}. Usa “Contar stock” en Productos.`]);
-  if (P.insumos_bajos.length) avisos.push(["warn", `<b>Comprar insumos:</b> ${P.insumos_bajos.map(i => `${esc(i.nombre)} (quedan ${n0(i.stock)})`).join(", ")}`]);
-  if (P.frascos_viejos.length) avisos.push(["warn", `<b>${P.frascos_viejos.length} frascos abiertos hace más de ${S.boot.config.dias_frasco_abierto} días</b> y con más de la mitad: el perfume se puede oxidar. Conviene moverlos (promo / decants): ${P.frascos_viejos.slice(0, 6).map(p => esc(p.nombre)).join(", ")}${P.frascos_viejos.length > 6 ? "…" : ""}`]);
-  if (P.quietos.length) avisos.push(["warn", `<b>${P.quietos.length} perfumes quietos</b> (no se venden hace más de ${S.boot.config.dias_sin_venta} días): ${P.quietos.slice(0, 6).map(p => esc(p.nombre)).join(", ")}. <a href="#productos/quietos">Ver</a>`]);
+  if (P.negativos.length) avisos.push(`Stock negativo en ${P.negativos.length} perfume(s): usa <b>Contar</b> en Stock.`);
+  if (P.insumos_bajos.length) avisos.push(`Comprar insumos: ${P.insumos_bajos.map(i => esc(i.nombre)).join(", ")}.`);
+  if (P.frascos_viejos.length) avisos.push(`${P.frascos_viejos.length} frascos abiertos hace mucho: conviene moverlos.`);
+  if (P.quietos.length) avisos.push(`${P.quietos.length} perfumes sin venderse hace más de ${cfg.dias_sin_venta} días. <a href="#productos/quietos">Ver</a>`);
+  if (avisos.length) grupos.push(["⚠️", "Avisos", avisos.length, avisos.map(t => fila(t)).join("")]);
+  const vsMes = D.mes_ant.ventas ? delta(D.mes.ventas, D.mes_ant.ventas) : "";
   el.innerHTML = `
-    <h1>Hola 👋</h1><p class="sub">${esc(neg)} · ${fecha(hoy())}</p>
-    <div class="quick" style="margin-bottom:18px">
-      <button onclick="location.hash='vender'">🛒 Nueva venta</button>
-      <button onclick="nuevaCompra()">📦 Registrar compra</button>
-      <button onclick="salida()">🎁 Regalo / uso / pérdida</button>
-      <button onclick="editarCliente()">👤 Nuevo cliente</button>
+    <p class="sub hoy">${fecha(hoy())}</p>
+    <button class="primary big vender" onclick="location.hash='vender'">🛒 Nueva venta</button>
+    <div class="quick3">
+      <button onclick="nuevaCompra()">📦<span>Compra</span></button>
+      <button onclick="editarCliente()">👤<span>Cliente</span></button>
+      <button onclick="salida()">🎁<span>Regalo o pérdida</span></button>
     </div>
-    <div class="grid g4" style="margin-bottom:18px">
-      <div class="kpi"><div class="l">Vendido hoy</div><div class="v">${bs(D.hoy.ventas, 0)}</div><div class="s">${D.hoy.n} venta${D.hoy.n === 1 ? "" : "s"}</div></div>
-      <div class="kpi"><div class="l">Esta semana</div><div class="v">${bs(D.semana.ventas, 0)}</div><div class="s">${D.semana.n} ventas · ganancia ${bs(D.semana.ganancia, 0)}</div></div>
-      <div class="kpi"><div class="l">Este mes</div><div class="v">${bs(D.mes.ventas, 0)}</div><div class="s">Mes pasado: ${bs(D.mes_ant.ventas, 0)}</div></div>
-      <div class="kpi"><div class="l">Ganancia de las ventas del mes</div><div class="v">${bs(D.mes.ganancia, 0)}</div><div class="s">${D.mes.n} ventas este mes</div></div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Hoy</div><div class="v">${bs(D.hoy.ventas, 0)}</div><div class="s">${D.hoy.n} venta${D.hoy.n === 1 ? "" : "s"}</div></div>
+      <div class="kpi"><div class="l">Este mes</div><div class="v">${bs(D.mes.ventas, 0)}</div><div class="s">${D.mes.n} ventas ${vsMes}</div></div>
+      <div class="kpi"><div class="l">Ganancia del mes</div><div class="v">${bs(D.mes.ganancia, 0)}</div><div class="s">antes de gastos</div></div>
     </div>
-    <div class="grid g2 todo">
-      <div class="card"><h2>🔁 Para reponer</h2><p class="hint">Se venden bien y se están acabando.</p>
-        ${P.reponer.length ? P.reponer.map(p => item(`<span style="flex:1"><b>${esc(p.nombre)}</b><div class="hint">${stockCell(p)} · vendido 60 días: ${bs(p.ventas_60d, 0)}</div></span>`)).join("") : `<div class="empty">Nada urgente ✅</div>`}</div>
-      <div class="card"><h2>🎯 Ofrecer el frasco completo</h2><p class="hint">Probaron el perfume en decant y todavía no compraron el frasco.</p>
-        ${P.ofrecer.length ? P.ofrecer.map(o => item(`<span style="flex:1"><b>${esc(o.cliente)}</b> → ${esc(o.perfume)}<div class="hint">Frasco: ${o.precio ? bs(o.precio, 0) : "sin precio"} ${o.hay_cerrado ? "· hay en stock" : ""}</div></span>
-          ${waBtn(o.wa, `Hola ${o.cliente}! ¿Qué tal te fue con el ${o.perfume}? Tengo el frasco completo${o.precio ? " a Bs " + n0(o.precio) : ""}. ¿Te lo separo?`, "Escribir") || `<a href="#clientes/${o.cliente_id}" class="hint">+ teléfono</a>`}`)).join("") : `<div class="empty">—</div>`}</div>
-      <div class="card"><h2>💬 Clientes para escribir</h2><p class="hint">Compraban seguido y hace más de ${S.boot.config.dias_cliente_riesgo} días que no compran.</p>
-        ${P.escribir.length ? P.escribir.map(c => item(`<span style="flex:1"><b>${esc(c.nombre)}</b><div class="hint">${c.compras} compras · ${bs(c.total, 0)} · hace ${c.dias} días · le gusta ${esc(c.favorito)}</div></span>
-          ${waBtn(c.wa, `Hola ${c.nombre}! Te escribo de ${S.boot.config.negocio}. Llegaron novedades que te pueden gustar 😊`, "Escribir") || `<a href="#clientes/${c.id}" class="hint">+ teléfono</a>`}`)).join("") : `<div class="empty">—</div>`}</div>
-      <div class="card"><h2>⚠️ Avisos</h2>${avisos.length ? avisos.map(a => `<div class="alert ${a[0]}">${a[1]}</div>`).join("") : `<div class="alert ok">Todo en orden ✅</div>`}</div>
+    <div class="card todo"><h2>Para hacer hoy</h2>
+      ${grupos.length ? grupos.map(g => `<details class="grupo" ${g === grupos[0] ? "open" : ""}><summary><span>${g[0]} ${g[1]}</span><span class="count">${g[2]}</span></summary>${g[3]}</details>`).join("")
+        : `<div class="alert ok">Todo en orden ✅</div>`}
     </div>
-    <div class="card"><div class="row"><h2 style="margin:0">Últimas ventas</h2><span class="spacer"></span><a href="#ventas">Ver todas →</a></div>${tablaVentas(ventas)}</div>`;
+    <div class="card"><div class="row"><h2 style="margin:0">Últimas ventas</h2><span class="spacer"></span><a href="#ventas">Ver todas →</a></div>
+      ${ventas.length ? ventas.map(v => `<a class="venta-mini" href="#ventas"><span><b>${esc(v.cliente || "Sin nombre")}</b><small>${fecha(v.fecha)} · ${esc(v.detalle || "")}</small></span><b>${bs(v.total, 0)}</b></a>`).join("")
+        : `<div class="empty">Todavía no hay ventas.</div>`}
+    </div>`;
 }
 
 // ================================================================== VENDER
