@@ -1,7 +1,7 @@
 window.AURA_CONFIG = {
   whatsappNumber: "59175070523",
   catalogEndpoint:
-    "https://script.google.com/macros/s/AKfycbyo6VmgSMmgS5yz5koBQJrpZPBPwCLtScqMKXtAnbwxdo0xNjRPvAwevLGxUk09l88VFQ/exec",
+    "https://script.google.com/macros/s/AKfycbyQ5N8WXoraRhcolNNwBoGEiZhE-yNb3FN9tJVeFsk0aPpMOnAMfbjQ3wv5UyXhgo14XQ/exec",
   bookingUrl: "",
   calendarEmbedUrl:
     "https://calendar.google.com/calendar/embed?src=e11e666796da4748fed2423894be417a3f1447cdd481e30dac6a3c9c7830338c%40group.calendar.google.com&ctz=America%2FLa_Paz",
