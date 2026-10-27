@@ -47,7 +47,25 @@ function lastMonths(n) {
   for (let i = 0; i < n; i++) { out.push(`${y}-${String(m).padStart(2, "0")}`); m--; if (!m) { m = 12; y--; } }
   return out;
 }
+// Barra inferior del celular: lo de todos los días a un toque; el resto en "Más".
+const TABS = [["inicio", "🏠", "Inicio"], ["productos", "🧴", "Stock"], ["vender", "🛒", "Vender"], ["clientes", "👥", "Clientes"]];
+function renderTabbar(page) {
+  const tb = $("#tabbar");
+  if (!tb) return;
+  const enMas = !TABS.some(t => t[0] === page);
+  tb.innerHTML = TABS.map(t => `<a href="#${t[0]}" class="${t[0] === page ? "active" : ""} ${t[0] === "vender" ? "main" : ""}" aria-current="${t[0] === page ? "page" : "false"}">
+      <span class="ico" aria-hidden="true">${t[1]}</span><span>${t[2]}</span></a>`).join("") +
+    `<button type="button" class="${enMas ? "active" : ""}" onclick="abrirMas()"><span class="ico" aria-hidden="true">☰</span><span>Más</span></button>`;
+}
+function abrirMas() {
+  const items = [["ventas", "🧾", "Ventas", "Historial, corregir o anular"], ["compras", "📦", "Compras", "Lo que entra al stock"],
+    ["gastos", "💸", "Gastos", "Envíos, publicidad, retiros"], ["salud", "📈", "Salud del negocio", "Ganancia, márgenes, consejos"],
+    ["ajustes", "⚙️", "Ajustes", "Sincronizar, conexión, reglas"]];
+  modal("Más opciones", `<div class="mas">${items.map(i => `<a href="#${i[0]}" onclick="closeModals()"><span class="ico" aria-hidden="true">${i[1]}</span>
+    <span><b>${i[2]}</b><small>${i[3]}</small></span></a>`).join("")}</div>`, null);
+}
 function renderNav(page) {
+  renderTabbar(page);
   $("#nav").innerHTML = `<div class="brand">${esc(S.boot?.config?.negocio || "Aura Essences")}<small>Perfumería · decants</small></div>` +
     NAV.map(n => n === "-" ? `<div class="sep"></div>` :
       `<a href="#${n[0]}" class="${n[0] === page ? "active" : ""}"><span class="ico">${n[1]}</span>${n[2]}</a>`).join("");
@@ -417,20 +435,20 @@ function editarPerfume(id) {
     ${F("Costo del frasco (Bs)", "costo_ref", p.costo_ref, "number")}${F("Precio venta frasco (Bs)", "precio_frasco", p.precio_frasco, "number")}
     ${F("Decant 2 ml (Bs)", "p2", p.p2, "number")}${F("Decant 3 ml (Bs)", "p3", p.p3, "number")}${F("Decant 5 ml (Bs)", "p5", p.p5, "number")}${F("Decant 9 ml (Bs)", "p9", p.p9, "number")}
     <label class="f wide">Notas<input name="notas" value="${esc(p.notas || "")}"></label>
-    <details class="wide"><summary><b>Página web</b> ${String(p.web || "").toUpperCase() === "SI" ? badgeNivel("ok", "visible") : badgeNivel("n", "oculto")}</summary><div class="form" style="margin-top:10px">
-      <div class="wide">${Chk("Mostrar en la página web", "web_chk", String(p.web || "").toUpperCase() === "SI")}</div>
+    <details class="wide"><summary><b>Página web</b> ${String(p.web || "").toUpperCase() === "OCULTO" ? badgeNivel("n", "oculto") : badgeNivel("ok", "visible")}</summary><div class="form" style="margin-top:10px">
+      <div class="wide">${Chk("Ocultar de la página web", "web_oculto", String(p.web || "").toUpperCase() === "OCULTO")}</div>
       <label class="f wide">Foto (URL de Cloudinary)<input name="imagen_url" value="${esc(p.imagen_url || "")}" placeholder="https://res.cloudinary.com/..."></label>
       ${F("Familia olfativa", "familia", p.familia || "")}${F("Orden en la web (1 = primero)", "destacado", p.destacado ?? "", "number")}
       <label class="f wide">Notas olfativas (separadas por |)<input name="notas_olf" value="${esc(p.notas_olf || "")}" placeholder="Vainilla|Canela|Ámbar"></label>
       <label class="f wide">Descripción<textarea name="descripcion" rows="4">${esc(p.descripcion || "")}</textarea></label>
-      <div class="wide hint">Precio y stock en la web salen solos de este perfume. La web se actualiza en unos 2 minutos.</div></div></details>
+      <div class="wide hint">Todos los perfumes activos salen en la web, con o sin foto. Precio y stock salen solos; la web se actualiza en unos 2 minutos.</div></div></details>
     ${id ? `<div class="wide">${Chk("Activo (desmarca si ya no lo trabajas)", "activo", !!p.activo)}</div>` : ""}
     <div class="wide hint">${id ? `Costo por ml actual: ${bs(p.costo_ml, 2)}. ` : ""}El stock no se cambia aquí: entra con <b>Compras</b> y sale con <b>Ventas</b>.</div></div>
     ${id ? `<details style="margin-top:14px"><summary class="hint">¿Está repetido con otro nombre? Unir con otro perfume</summary>
       <div class="row" style="margin-top:8px">${Sel("Pasar todo su historial a", "unir_con", [["", "— elegir —"], ...otros], "", 'id="unir"')}<button class="danger" id="unir-btn" style="margin-top:18px">Unir</button></div></details>` : ""}`,
     async d => {
       if (!d.nombre) throw new Error("Falta el nombre.");
-      const body = { ...d, activo: id ? (d.activo ? 1 : 0) : 1, web: d.web_chk ? "SI" : "NO" }; delete body.unir_con; delete body.web_chk;
+      const body = { ...d, activo: id ? (d.activo ? 1 : 0) : 1, web: d.web_oculto ? "OCULTO" : "SI" }; delete body.unir_con; delete body.web_oculto;
       if (id) await api("perfumes/" + id, { method: "PUT", body });
       else {
         if (S.boot.perfumes.some(x => x.nombre.toLowerCase() === d.nombre.toLowerCase())) throw new Error("Ya existe un perfume con ese nombre.");
@@ -874,6 +892,16 @@ const PAGES = { inicio: pgInicio, vender: pgVender, ventas: pgVentas, productos:
   clientes: pgClientes, gastos: pgGastos, salud: pgSalud, ajustes: pgAjustes };
 
 window.addEventListener("hashchange", route);
+
+// En el celular las tablas se muestran como tarjetas: cada dato lleva el nombre de su columna.
+function etiquetarTablas(root) {
+  $$("table", root).forEach(t => {
+    const heads = $$("thead th", t).map(th => th.textContent.trim());
+    if (!heads.length) return;
+    $$("tbody tr", t).forEach(tr => [...tr.children].forEach((td, i) => { if (!td.hasAttribute("data-label")) td.setAttribute("data-label", heads[i] || ""); }));
+  });
+}
+new MutationObserver(() => etiquetarTablas(document.body)).observe(document.body, { childList: true, subtree: true });
 (async () => {
   let st;
   try { st = await Sync.init(onRemoteChange); }

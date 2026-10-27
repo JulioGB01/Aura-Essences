@@ -5,6 +5,6 @@
   "description": "Catálogo estático de Aura Essences con carrito a WhatsApp.",
   "scripts": {
     "start": "node tools/dev-server.mjs",
-    "check": "node --check app.js && node --check config.js && node --check data/products.js"
+    "check": "node --check app.js && node --check config.js"
   }
 }

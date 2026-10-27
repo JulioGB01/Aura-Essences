@@ -12,12 +12,14 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header class="topbar"><span class="tb-brand" translate="no">Aura Essences</span></header>
 <div class="layout">
   <nav class="side" id="nav"></nav>
   <main id="main"><div class="empty">Cargando…</div></main>
 </div>
-<button id="sync" class="sync idle" onclick="Sync.syncNow().then(() => typeof refresh === 'function' && refresh())">☁️</button>
-<div id="toast"></div>
+<nav class="tabbar" id="tabbar" aria-label="Menú principal"></nav>
+<button id="sync" class="sync idle" aria-label="Sincronizar ahora" onclick="Sync.syncNow().then(() => typeof refresh === 'function' && refresh())">☁️</button>
+<div id="toast" role="status" aria-live="polite"></div>
 <datalist id="dl-perfumes"></datalist>
 <datalist id="dl-clientes"></datalist>
 <datalist id="dl-proveedores"></datalist>

@@ -2,11 +2,14 @@
   "use strict";
 
   const config = window.AURA_CONFIG || {};
-  const fallbackProducts = Array.isArray(window.AURA_PRODUCTS) ? window.AURA_PRODUCTS : [];
   const CART_KEY = "aura-essences-cart-v1";
+  const CATALOG_KEY = "aura-essences-catalog-v2";
+  const NO_PHOTO = "assets/sin-foto.svg";
+  const cachedProducts = loadCachedCatalog();
 
   const state = {
-    products: fallbackProducts.map(normalizeProduct).filter(Boolean),
+    products: cachedProducts.map(normalizeProduct).filter(Boolean),
+    loading: cachedProducts.length === 0,
     cart: loadCart(),
     filters: { search: "", gender: "all", format: "all", sort: "featured" },
     activeProductId: null,
@@ -64,7 +67,7 @@
             .map((note) => note.trim())
             .filter(Boolean),
       description: String(product.description || "Consulta sus detalles y disponibilidad."),
-      image: String(product.image || ""),
+      image: String(product.image || "") || NO_PHOTO,
       featured: Number(product.featured) || index + 1,
       variants,
     };
@@ -83,6 +86,19 @@
       price: Math.max(0, Number(variant.price) || 0),
       stock: Math.max(0, Math.floor(Number(variant.stock) || 0)),
     };
+  }
+
+  function loadCachedCatalog() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(CATALOG_KEY));
+      return Array.isArray(stored) ? stored : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function inStock(product) {
+    return product.variants.some((variant) => variant.stock > 0);
   }
 
   function loadCart() {
@@ -159,6 +175,8 @@
     });
 
     return filtered.sort((a, b) => {
+      const stockOrder = Number(inStock(b)) - Number(inStock(a));
+      if (stockOrder) return stockOrder;
       if (state.filters.sort === "price-asc") return minimumPrice(a) - minimumPrice(b);
       if (state.filters.sort === "price-desc") return minimumPrice(b) - minimumPrice(a);
       if (state.filters.sort === "name") return a.name.localeCompare(b.name, "es");
@@ -167,6 +185,13 @@
   }
 
   function renderProducts() {
+    if (state.loading) {
+      elements.resultsCount.textContent = "…";
+      elements.emptyState.hidden = true;
+      elements.productGrid.hidden = false;
+      elements.productGrid.innerHTML = '<p class="catalog-loading">Cargando catálogo…</p>';
+      return;
+    }
     const products = getFilteredProducts();
     elements.resultsCount.textContent = products.length;
     elements.emptyState.hidden = products.length > 0;
@@ -181,17 +206,20 @@
     const hasPartial = types.has("parcial");
     const lowStock = variants.some((variant) => variant.stock === 1);
     const formats = types.size === 1 ? "1 formato" : `${types.size} formatos`;
+    const soldOut = variants.length === 0;
     const badges = [
-      `<span class="badge">${escapeHtml(genderLabel(product.gender))} · ${formats}</span>`,
+      soldOut
+        ? '<span class="badge badge-soldout">Agotado</span>'
+        : `<span class="badge">${escapeHtml(genderLabel(product.gender))} · ${formats}</span>`,
       hasPartial ? '<span class="badge badge-special">Parcial disponible</span>' : "",
       lowStock && !hasPartial ? '<span class="badge badge-special">Últimas unidades</span>' : "",
     ].join("");
 
     return `
-      <article class="product-card">
+      <article class="product-card${soldOut ? " is-sold-out" : ""}">
         <button class="product-card-image" type="button" data-product-id="${escapeHtml(product.id)}" aria-label="Ver opciones de ${escapeHtml(product.name)}">
           <div class="card-badges">${badges}</div>
-          <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy" decoding="async" />
+          <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" width="600" height="648" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${NO_PHOTO}'" />
         </button>
         <div class="product-card-info">
           <p class="product-brand">${escapeHtml(product.brand)}</p>
@@ -199,7 +227,7 @@
           <p class="product-notes">${escapeHtml(product.notes.join(" · "))}</p>
           <div class="product-card-footer">
             <div class="product-price">
-              <span>${variants.length ? "Desde" : "Sin stock"}</span>
+              <span>${variants.length ? "Desde" : "Sin stock por ahora"}</span>
               <strong>${variants.length ? formatMoney(minimumPrice(product)) : "Consultar"}</strong>
             </div>
             <button class="card-action" type="button" data-product-id="${escapeHtml(product.id)}">
@@ -264,7 +292,7 @@
       <div class="product-modal-layout">
         <div class="product-modal-image">
           <span class="badge">${escapeHtml(genderLabel(product.gender))}</span>
-          <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" />
+          <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" width="600" height="648" onerror="this.onerror=null;this.src='${NO_PHOTO}'" />
         </div>
         <div class="product-modal-details">
           <p class="product-brand">${escapeHtml(product.brand)}</p>
@@ -699,22 +727,38 @@
     });
   }
 
+  async function fetchCatalog(url) {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    const rows = Array.isArray(payload) ? payload : payload.products;
+    if (!Array.isArray(rows) || !rows.length) throw new Error("Catálogo vacío");
+    return rows;
+  }
+
   async function loadRemoteCatalog() {
-    if (!config.catalogEndpoint) return;
-    try {
-      const response = await fetch(config.catalogEndpoint, { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = await response.json();
-      const rows = Array.isArray(payload) ? payload : payload.products;
-      if (!Array.isArray(rows)) throw new Error("La respuesta no contiene productos");
-      const products = rows.map(normalizeProduct).filter(Boolean);
-      if (!products.length) throw new Error("El catálogo está vacío");
-      state.products = products;
-      renderProducts();
-      renderCart();
-    } catch (error) {
-      console.warn("No se pudo cargar el catálogo remoto; se usan los datos locales.", error);
-      showToast("No pudimos actualizar el catálogo. Mostramos la colección guardada.");
+    const urls = [config.catalogEndpoint, config.catalogFallback].filter(Boolean);
+    for (const url of urls) {
+      try {
+        const rows = await fetchCatalog(url);
+        state.products = rows.map(normalizeProduct).filter(Boolean);
+        state.loading = false;
+        try { localStorage.setItem(CATALOG_KEY, JSON.stringify(rows)); } catch { /* sin espacio */ }
+        renderProducts();
+        renderCart();
+        return;
+      } catch (error) {
+        console.warn("No se pudo cargar el catálogo desde", url, error);
+      }
+    }
+    state.loading = false;
+    renderProducts();
+    if (!state.products.length) {
+      elements.emptyState.hidden = true;
+      elements.productGrid.hidden = false;
+      elements.productGrid.innerHTML = '<p class="catalog-loading">No pudimos cargar el catálogo. Escríbenos por WhatsApp y te enviamos la lista.</p>';
+    } else {
+      showToast("No pudimos actualizar el catálogo. Mostramos la última versión guardada.");
     }
   }
 

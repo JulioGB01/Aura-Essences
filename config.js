@@ -1,6 +1,9 @@
 window.AURA_CONFIG = {
   whatsappNumber: "59175070523",
   catalogEndpoint:
+    "https://script.google.com/macros/s/AKfycbyo6VmgSMmgS5yz5koBQJrpZPBPwCLtScqMKXtAnbwxdo0xNjRPvAwevLGxUk09l88VFQ/exec",
+  // catálogo anterior: se usa solo si el nuevo no responde
+  catalogFallback:
     "https://script.google.com/macros/s/AKfycbyQ5N8WXoraRhcolNNwBoGEiZhE-yNb3FN9tJVeFsk0aPpMOnAMfbjQ3wv5UyXhgo14XQ/exec",
   bookingUrl: "",
   calendarEmbedUrl:

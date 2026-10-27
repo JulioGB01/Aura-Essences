@@ -1909,3 +1909,21 @@ svg {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* catálogo conectado */
+.catalog-loading {
+  grid-column: 1 / -1;
+  padding: 48px 16px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.product-card.is-sold-out .product-card-image img {
+  filter: grayscale(0.6);
+  opacity: 0.72;
+}
+
+.badge-soldout {
+  background: var(--ink);
+  color: var(--white);
+}
